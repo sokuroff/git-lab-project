@@ -1,3 +1,5 @@
+// Added a clarifying comment during rebase
+
 // 1. Данные: массив объектов с цитатами
 const quotes = [
     {
@@ -16,14 +18,14 @@ const quotes = [
 
 const quoteList = document.getElementById('quote-list');
 
-// 3. Улучшенная функция для отображения цитат (РЕФАКТОРИНГ)
+// 3. Обновляем функцию displayQuotes, чтобы она добавляла data-атрибут
 function displayQuotes() {
     quoteList.innerHTML = ''; 
-
     quotes.forEach(quote => {
-        // Создаем элементы DOM программно
         const li = document.createElement('li');
+        li.dataset.id = quote.id; // НОВОЕ: добавляем data-id="1", data-id="2" и т.д.
 
+        // ... (остальная часть функции без изменений) ...
         const quoteText = document.createElement('p');
         quoteText.className = 'quote-text';
         quoteText.textContent = `«${quote.text}»`;
@@ -35,26 +37,33 @@ function displayQuotes() {
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
         deleteBtn.textContent = 'Удалить';
-
-        // Собираем li из созданных элементов
-        li.append(quoteText, quoteAuthor, deleteBtn);
         
-        // Добавляем готовый li в список на странице
+        li.append(quoteText, quoteAuthor, deleteBtn);
         quoteList.append(li);
     });
 }
 
-// 4. Вызываем функцию
 displayQuotes();
 
-// 5. Логика удаления (НОВОЕ)
-// Используем делегирование событий: вешаем один обработчик на весь список
+// 5. Обновляем логику удаления (ИСПРАВЛЕНИЕ БАГА)
 quoteList.addEventListener('click', function(event) {
-    // Проверяем, был ли клик именно по кнопке с классом 'delete-btn'
     if (event.target.classList.contains('delete-btn')) {
-        // Находим родительский элемент <li> кнопки, по которой кликнули
         const listItemToRemove = event.target.closest('li');
-        // Удаляем этот элемент со страницы
+        
+        // Получаем ID из data-атрибута
+        const idToRemove = Number(listItemToRemove.dataset.id);
+
+        // Находим индекс элемента в массиве, который нужно удалить
+        const indexToRemove = quotes.findIndex(quote => quote.id === idToRemove);
+
+        // Если элемент найден, удаляем его из массива
+        if (indexToRemove > -1) {
+            quotes.splice(indexToRemove, 1);
+        }
+        
+        // Удаляем элемент из DOM
         listItemToRemove.remove();
+
+        console.log(quotes); // Для проверки. Откройте консоль в браузере и увидите, что массив тоже меняется.
     }
 });
