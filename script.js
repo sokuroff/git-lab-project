@@ -14,27 +14,47 @@ const quotes = [
     }
 ];
 
-// 2. Находим контейнер для цитат в HTML
 const quoteList = document.getElementById('quote-list');
 
-// 3. Функция для отображения цитат
+// 3. Улучшенная функция для отображения цитат (РЕФАКТОРИНГ)
 function displayQuotes() {
-    // Очищаем список перед добавлением, чтобы избежать дубликатов
     quoteList.innerHTML = ''; 
 
-    // Проходим по каждой цитате в массиве
     quotes.forEach(quote => {
-        // Создаем HTML-элемент для каждой цитаты
-        const listItem = `
-            <li>
-                <p class="quote-text">«${quote.text}»</p>
-                <p class="quote-author">— ${quote.author}</p>
-            </li>
-        `;
-        // Добавляем созданный элемент в список на странице
-        quoteList.innerHTML += listItem;
+        // Создаем элементы DOM программно
+        const li = document.createElement('li');
+
+        const quoteText = document.createElement('p');
+        quoteText.className = 'quote-text';
+        quoteText.textContent = `«${quote.text}»`;
+
+        const quoteAuthor = document.createElement('p');
+        quoteAuthor.className = 'quote-author';
+        quoteAuthor.textContent = `— ${quote.author}`;
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = 'Удалить';
+
+        // Собираем li из созданных элементов
+        li.append(quoteText, quoteAuthor, deleteBtn);
+        
+        // Добавляем готовый li в список на странице
+        quoteList.append(li);
     });
 }
 
-// 4. Вызываем функцию, чтобы цитаты отобразились при загрузке страницы
+// 4. Вызываем функцию
 displayQuotes();
+
+// 5. Логика удаления (НОВОЕ)
+// Используем делегирование событий: вешаем один обработчик на весь список
+quoteList.addEventListener('click', function(event) {
+    // Проверяем, был ли клик именно по кнопке с классом 'delete-btn'
+    if (event.target.classList.contains('delete-btn')) {
+        // Находим родительский элемент <li> кнопки, по которой кликнули
+        const listItemToRemove = event.target.closest('li');
+        // Удаляем этот элемент со страницы
+        listItemToRemove.remove();
+    }
+});

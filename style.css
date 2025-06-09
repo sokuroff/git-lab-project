@@ -55,3 +55,41 @@ h1 {
     color: #777;
     text-align: right;
 }
+
+/* Стили для кнопки удаления */
+.delete-btn {
+    background: none;
+    border: 1px solid #ff6b6b;
+    color: #ff6b6b;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    float: right; /* Размещаем кнопку справа */
+    margin-top: 10px;
+    transition: background-color 0.2s, color 0.2s; /* Плавный переход для hover-эффекта */
+}
+
+.delete-btn:hover {
+    background-color: #ff6b6b;
+    color: #fff;
+}
+
+/* Небольшой фикс, чтобы автор не налезал на кнопку */
+#quote-list li {
+    /* ... (существующие стили) ... */
+    position: relative;
+    padding-bottom: 50px; /* Добавляем отступ снизу для кнопки */
+}
+.quote-author {
+    /* ... (существующие стили) ... */
+    margin-right: 5px; /* Небольшой отступ от края */
+}
+
+.delete-btn {
+    /* ... (существующие стили) ... */
+    position: absolute; /* Позиционируем кнопку абсолютно внутри li */
+    bottom: 20px;
+    right: 25px;
+}
